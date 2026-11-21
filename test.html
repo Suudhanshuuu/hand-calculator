@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hand Number Counter - Test Page</h1>
+    <p>This page helps verify that all components are working correctly.</p>
+
+    <div class="test-section">
+        <h2>✅ Quick Start</h2>
+        <p>To use the app:</p>
+        <ol>
+            <li><strong>Option 1 (Recommended):</strong> Run <code>python server.py</code> in this directory, then open <a href="http://localhost:8000" target="_blank">http://localhost:8000</a></li>
+            <li><strong>Option 2:</strong> Open <code>index.html</code> directly in your browser (may have CORS issues with model loading)</li>
+            <li><strong>Option 3:</strong> Use any simple HTTP server like <code>python -m http.server 8000</code></li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>🔧 Manual Test</h2>
+        <p>After opening the app, check these features:</p>
+        <ul>
+            <li>✓ Camera starts when clicking "Start Camera"</li>
+            <li>✓ Hand landmarks appear on your hand
+            <li>✓ Finger count updates in real-time</li>
+            <li>✓ Numbers are added to the total</li>
+            <li>✓ History shows previous numbers</li>
+            <li>✓ "Reset" button clears the counter</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 Troubleshooting</h2>
+        <p><strong>If it doesn't work:</strong></p>
+        <ul>
+            <li>Make sure you're using Chrome or Firefox (best supported)</li>
+            <li>Allow camera permissions when prompted</li>
+            <li>Ensure good lighting on your hand</li>
+            <li>Make sure your hand is clearly visible to the camera</li>
+            <li>Try refreshing the page if the model fails to load</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 Test Your Hand</h2>
+        <p>Try these hand positions:</p>
+        <ul>
+            <li>✌️ Show 2 fingers - should detect 2</li>
+            <li>👋 Show 5 fingers - should detect 5</li>
+            <li>🤟 Show 0 fingers (fist) - should detect 0</li>
+            <li>👆 Show 1 finger - should detect 1</li>
+        </ul>
+        <p>The app should add each detected number to the running total!</p>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 App Structure</h2>
+        <p>Files in this project:</p>
+        <pre>
+hand-number-counter/
+├── index.html          # Main HTML file with UI
+├── app.js              # Main JavaScript with hand detection logic
+├── package.json        # Project metadata and dependencies
+├── server.py           # Simple Python server to serve the app
+├── README.md           # Documentation
+└── test.html           # This test file
+        </pre>
+    </div>
+
+    <div class="test-section">
+        <h2>🎉 Ready to Use!</h2>
+        <p>Open <code>index.html</code> in your browser or run:</p>
+        <pre><code>python server.py</code></pre>
+        <p>Then visit <a href="http://localhost:8000" target="_blank">http://localhost:8000</a></p>
+    </div>
+</body>
+</html>

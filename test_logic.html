@@ -1,0 +1,161 @@
+// Test the finger counting logic without camera
+// This simulates hand landmarks for testing
+
+console.log('Testing Hand Number Counter Logic');
+console.log('==================================\n');
+
+// Simulate hand landmarks for different finger configurations
+const testCases = [
+    { name: 'Closed fist (0 fingers)', landmarks: generateFistLandmarks() },
+    { name: 'One finger up (1 finger)', landmarks: generateOneFingerLandmarks() },
+    { name: 'Two fingers (2 fingers)', landmarks: generateTwoFingersLandmarks() },
+    { name: 'Three fingers (3 fingers)', landmarks: generateThreeFingersLandmarks() },
+    { name: 'Four fingers (4 fingers)', landmarks: generateFourFingersLandmarks() },
+    { name: 'Five fingers spread (5 fingers)', landmarks: generateFiveFingersLandmarks() }
+];
+
+// Simple landmark generator for testing
+function generateFistLandmarks() {
+    // All fingers curled - tips below joints
+    return Array.from({length: 21}, (_, i) => {
+        const baseY = i * 5;
+        return [i * 10, baseY + 50]; // All tips shifted down
+    });
+}
+
+function generateOneFingerLandmarks() {
+    const landmarks = Array.from({length: 21}, (_, i) => [i * 10, i * 5]);
+
+    // Only index finger extended
+    landmarks[8][1] = landmarks[6][1] - 30; // Index tip above joint
+    landmarks[7][1] = landmarks[6][1] - 15;
+
+    return landmarks;
+}
+
+function generateTwoFingersLandmarks() {
+    const landmarks = Array.from({length: 21}, (_, i) => [i * 10, i * 5]);
+
+    // Index and middle fingers extended
+    landmarks[8][1] = landmarks[6][1] - 30;
+    landmarks[7][1] = landmarks[6][1] - 15;
+
+    landmarks[12][1] = landmarks[10][1] - 30;
+    landmarks[11][1] = landmarks[10][1] - 15;
+
+    return landmarks;
+}
+
+function generateThreeFingersLandmarks() {
+    const landmarks = Array.from({length: 21}, (_, i) => [i * 10, i * 5]);
+
+    // Index, middle, ring fingers extended
+    landmarks[8][1] = landmarks[6][1] - 30;
+    landmarks[12][1] = landmarks[10][1] - 30;
+    landmarks[16][1] = landmarks[14][1] - 30;
+
+    return landmarks;
+}
+
+function generateFourFingersLandmarks() {
+    const landmarks = Array.from({length: 21}, (_, i) => [i * 10, i * 5]);
+
+    // Index, middle, ring, pinky extended
+    landmarks[8][1] = landmarks[6][1] - 30;
+    landmarks[12][1] = landmarks[10][1] - 30;
+    landmarks[16][1] = landmarks[14][1] - 30;
+    landmarks[20][1] = landmarks[18][1] - 30;
+
+    return landmarks;
+}
+
+function generateFiveFingersLandmarks() {
+    const landmarks = Array.from({length: 21}, (_, i) => [i * 10, i * 5]);
+
+    // Thumb angle check for extension
+    landmarks[4][1] = landmarks[3][1] - 20;
+
+    // All other fingers extended
+    landmarks[8][1] = landmarks[6][1] - 30;
+    landmarks[12][1] = landmarks[10][1] - 30;
+    landmarks[16][1] = landmarks[14][1] - 30;
+    landmarks[20][1] = landmarks[18][1] - 30;
+
+    return landmarks;
+}
+
+// Test the countFingers function
+function testCountFingers() {
+    console.log('Running finger detection tests...\n');
+
+    let passed = 0;
+    let failed = 0;
+
+    testCases.forEach(testCase => {
+        const result = countFingers(testCase.landmarks);
+        const expected = parseInt(testCase.name.match(/\d+/)[0]);
+
+        const status = result === expected ? '✅ PASS' : '❌ FAIL';
+        if (result === expected) {
+            passed++;
+        } else {
+            failed++;
+        }
+
+        console.log(`${status}: ${testCase.name}`);
+        console.log(`   Expected: ${expected}, Got: ${result}\n`);
+    });
+
+    console.log('Test Summary:');
+    console.log(`   Passed: ${passed}`);
+    console.log(`   Failed: ${failed}`);
+    console.log(`   Total:  ${testCases.length}`);
+
+    return failed === 0;
+}
+
+// Copy the actual countFingers function from app.js
+function calculateAngle(a, b, c) {
+    const ab = Math.sqrt(Math.pow(b[0] - a[0], 2) + Math.pow(b[1] - a[1], 2));
+    const bc = Math.sqrt(Math.pow(b[0] - c[0], 2) + Math.pow(b[1] - c[1], 2));
+    const ac = Math.sqrt(Math.pow(c[0] - a[0], 2) + Math.pow(c[1] - a[1], 2));
+
+    // Law of cosines
+    return Math.acos((ab * ab + bc * bc - ac * ac) / (2 * ab * bc)) * (180 / Math.PI);
+}
+
+function countFingers(landmarks) {
+    if (!landmarks || landmarks.length < 21) return 0;
+
+    const fingerTips = [4, 8, 12, 16, 20];
+    const fingerJoints = [3, 6, 10, 14, 18];
+    const fingerBases = [2, 5, 9, 13, 17]; // Correct MCP joint indices
+    let count = 0;
+
+    // Thumb is special - check angle between base, joint, tip
+    const thumbTip = landmarks[4];
+    const thumbJoint = landmarks[3];
+    const thumbBase = landmarks[2];
+
+    const thumbAngle = calculateAngle(thumbBase, thumbJoint, thumbTip);
+    if (thumbAngle > 90) count++;
+
+    // Other fingers - check if tip is above joint
+    for (let i = 1; i < 5; i++) {
+        const tip = landmarks[fingerTips[i]];
+        const joint = landmarks[fingerJoints[i]];
+        const base = landmarks[fingerBases[i]]; // Fixed: use proper base index
+
+        const angle = calculateAngle(base, joint, tip);
+
+        // If finger is raised (tip above joint)
+        if (tip[1] < joint[1] && angle > 90) {
+            count++;
+        }
+    }
+
+    return Math.min(count, 5);
+}
+
+// Run tests
+testCountFingers();

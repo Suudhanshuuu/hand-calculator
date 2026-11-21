@@ -1,0 +1,25 @@
+{
+  "name": "hand-number-counter",
+  "version": "1.0.0",
+  "description": "A hand gesture recognition app that counts raised fingers",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000"
+  },
+  "keywords": [
+    "hand",
+    "gesture",
+    "recognition",
+    "finger",
+    "counter",
+    "tensorflow",
+    "webcam"
+  ],
+  "author": "Claude Code",
+  "license": "MIT",
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.0.0",
+    "@tensorflow-models/handpose": "^0.0.7"
+  }
+}
